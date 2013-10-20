@@ -1,4 +1,4 @@
-Box-View-API-Python-SDK
+box-view-api-python-sdk
 =======================
 
 A Python SDK for the [Box View API](http://developers.box.com/view)
