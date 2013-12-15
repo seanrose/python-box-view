@@ -47,6 +47,7 @@ class BoxViewClient(object):
         self.requests = requests.session()
         self.requests.headers = auth_header
         self.url = s.VIEW_API_URL
+        self.upload_url = s.UPLOAD_VIEW_API_URL
 
     # Core API Methods
 
@@ -60,6 +61,18 @@ class BoxViewClient(object):
         data = json.dumps({'url': url})
 
         response = self.requests.post(resource, headers=headers, data=data)
+
+        return response
+
+    @raise_for_view_error
+    def multipart_upload_document(self, document):
+        """
+        """
+
+        resource = '{}{}'.format(self.upload_url, DOCUMENTS_RESOURCE)
+        files = {'file': document}
+
+        response = self.requests.post(resource, files=files)
 
         return response
 
