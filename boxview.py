@@ -6,6 +6,7 @@ from boxviewerror import raise_for_view_error
 
 DOCUMENTS_RESOURCE = '/documents'
 SESSIONS_RESOURCE = '/sessions'
+VIEW_RESOURCE = '/view'
 
 PROCESSING = 'processing'
 DONE = 'done'
@@ -92,13 +93,16 @@ class BoxViewClient(object):
         return response
 
     @raise_for_view_error
-    def create_session(self, document_id):
+    def create_session(self, document_id, expires_at=None):
         """
         """
 
         resource = '{}{}'.format(self.url, SESSIONS_RESOURCE)
         headers = {'Content-type': 'application/json'}
-        data = json.dumps({'document_id': document_id})
+        data = {'document_id': document_id}
+        if expires_at:
+            data['expires_at'] = expires_at
+        data = json.dumps(data)
 
         response = self.requests.post(resource, headers=headers, data=data)
 
@@ -123,8 +127,14 @@ class BoxViewClient(object):
         return document['status']
 
     @staticmethod
-    def create_session_url(session_id):
+    def create_session_url(session_id, theme='light'):
         """
         """
 
-        return '{}{}'.format(s.SESSION_BASE_URL, session_id)
+        return '{}{}/{}{}?theme={}'.format(
+            s.VIEW_API_URL,
+            SESSIONS_RESOURCE,
+            session_id,
+            VIEW_RESOURCE,
+            theme
+        )
